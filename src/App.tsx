@@ -113,22 +113,27 @@ export const App = () => {
             </div>
           </div>
 
-          {selectedUser && (
-            <div
-              data-cy="Sidebar"
-              className={classNames(
-                'tile',
-                'is-parent',
-                'is-8-desktop',
-                'Sidebar',
-                { 'Sidebar--open': !!selectedPost },
-              )}
-            >
-              <div className="tile is-child box is-success ">
+          <div
+            data-cy="Sidebar"
+            className={classNames(
+              'tile',
+              'is-parent',
+              'is-8-desktop',
+              'Sidebar',
+              {
+                'Sidebar--open': !!selectedPost,
+                'is-hidden': !selectedUser,
+              },
+            )}
+          >
+            <div className="tile is-child box is-success ">
+              {selectedPost ? (
                 <PostDetails selectedPost={selectedPost} />
-              </div>
+              ) : (
+                <p>Select a post to see details</p>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </main>

@@ -17,8 +17,13 @@ export const PostDetails: React.FC<Props> = ({ selectedPost }) => {
   // const [isLoadingForDelete, setIsLoadingForDelete] = useState(false);
 
   useEffect(() => {
+    if (!selectedPost) {
+      return;
+    }
+
     const findComments = async () => {
       setIsLoading(true);
+      setShowForm(false);
 
       try {
         const currentComments = await client.get(
@@ -54,7 +59,9 @@ export const PostDetails: React.FC<Props> = ({ selectedPost }) => {
     <div className="content" data-cy="PostDetails">
       <div className="content" data-cy="PostDetails">
         <div className="block">
-          <h2 data-cy="PostTitle">{selectedPost?.title}</h2>
+          <h2 data-cy="PostTitle">
+            #{selectedPost?.id}: {selectedPost?.title}
+          </h2>
 
           <p data-cy="PostBody">{selectedPost?.body}</p>
         </div>
@@ -68,7 +75,9 @@ export const PostDetails: React.FC<Props> = ({ selectedPost }) => {
             </div>
           )}
 
-          {comments.length > 0 ? (
+          {!isLoading &&
+            comments.length > 0 &&
+            !error &&
             comments.map(com => (
               <article
                 className="message is-small"
@@ -95,14 +104,15 @@ export const PostDetails: React.FC<Props> = ({ selectedPost }) => {
                   {com.body}
                 </div>
               </article>
-            ))
-          ) : (
+            ))}
+
+          {!isLoading && !error && comments.length === 0 && (
             <p className="title is-4" data-cy="NoCommentsMessage">
               No comments yet
             </p>
           )}
 
-          {!showForm && (
+          {!isLoading && !error && !showForm && (
             <button
               data-cy="WriteCommentButton"
               type="button"
